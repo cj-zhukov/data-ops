@@ -1,6 +1,13 @@
 import pandas as pd
 import random
 
+# How to display full Dataframe
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', None)
+
+
 def concat_example():
     df1 = pd.DataFrame({"id": [1, 2], "data": ["foo", "bar"]})
     df2 = pd.DataFrame({"id": [3], "data": ["baz"]})
@@ -33,7 +40,7 @@ def get_df():
 
 
 def get_df_rnd():
-    data = [{"id":i, "value": random.randint(1, 100)} for i in range(1, 6)]
+    data = [{"id": i, "value": random.randint(1, 100)} for i in range(1, 6)]
     df = pd.DataFrame(data)
     return df
 
@@ -45,7 +52,9 @@ def foo(x):
 def iter_df(df):
     for idx, row in df.iterrows():
         idx += 1
-        print(f"#{idx} id: {row['id']}, name: {row['name']}, data: {row['data']}")
+        print(
+            f"#{idx} id: {row['id']}, name: {row['name']}, data: {row['data']}")
+
 
 if __name__ == "__main__":
     # df = get_df()
