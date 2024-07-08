@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+import json
 
 # How to display full Dataframe
 pd.set_option('display.max_rows', None)
@@ -54,6 +55,25 @@ def iter_df(df):
         idx += 1
         print(
             f"#{idx} id: {row['id']}, name: {row['name']}, data: {row['data']}")
+
+
+def parse_json_example():
+    df = pd.DataFrame({
+        'bank_account': [101, 102, 201, 301],
+        'data': [
+            '{"uid": 100, "account_type": 1, "account_data": {"currency": {"current": 1000, "minimum": -500}, "fees": {"monthly": 13.5}}, "user_name": "Alice"}',
+            '{"uid": 100, "account_type": 2, "account_data": {"currency": {"current": 2000, "minimum": 0},  "fees": {"monthly": 0}}, "user_name": "Alice"}',
+            '{"uid": 200, "account_type": 1, "account_data": {"currency": {"current": 3000, "minimum": 0},  "fees": {"monthly": 13.5}}, "user_name": "Bob"}',
+            '{"uid": 300, "account_type": 1, "account_data": {"currency": {"current": 4000, "minimum": 0},  "fees": {"monthly": 13.5}}, "user_name": "Carol"}'
+        ]},
+        index=['Alice', 'Alice', 'Bob', 'Carol']
+    )
+
+    parsed_df = pd.concat([pd.json_normalize(json.loads(js))
+                          for js in df['data']])
+    # parsed_df['bank_account'] = df['bank_account'].values
+    # parsed_df.index = parsed_df['user_name']
+    print(parsed_df)
 
 
 if __name__ == "__main__":
