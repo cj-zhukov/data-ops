@@ -1,10 +1,12 @@
 import datafusion
 import pyarrow as pa
-import pyarrow.parquet as pq
-import pandas as pd
+# import pyarrow.parquet as pq
+# import pandas as pd
+
 
 def foo(x: str) -> str:
     return f"{x}-foo"
+
 
 def add_col_example():
     batch = pa.RecordBatch.from_arrays(
@@ -14,8 +16,23 @@ def add_col_example():
     ctx = datafusion.SessionContext()
     df = ctx.create_dataframe([[batch]])
     table = df.to_arrow_table()
-    table = table.append_column('new-col', pa.array(['foo'] * len(table), pa.string()))
+    table = table.append_column(
+        'new-col', pa.array(['foo'] * len(table), pa.string()))
     print(table)
+
+
+def get_columns_names(df) -> list[str]:
+    cols = str(df.schema())
+    cols = " ".join(cols.split())
+    cols = cols.split(" ")
+    cols = [col.replace(":", "") for col in cols if ":" in col]
+    return cols
+
+
+def select_all_exclude(df, to_exclude: list[str]):
+    cols = get_columns_names(df)
+    cols = [col for col in cols if col not in to_exclude]
+    return df.select_columns(" ".join(cols))
 
 
 if __name__ == "__main__":
